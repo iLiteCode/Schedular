@@ -116,6 +116,42 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
+        {/* Install App Banner */}
+        {showInstallBanner && (
+          <div className="mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg p-4 shadow-lg animate-in slide-in-from-top" data-testid="install-banner">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Smartphone className="w-6 h-6" />
+                <div>
+                  <p className="font-semibold">Install Mobile App</p>
+                  <p className="text-sm text-white/90">Access interviews anytime, anywhere</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={handleInstallClick}
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white text-indigo-600 hover:bg-gray-100"
+                  data-testid="install-app-btn"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Install
+                </Button>
+                <Button
+                  onClick={() => setShowInstallBanner(false)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20"
+                  data-testid="close-install-banner-btn"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
