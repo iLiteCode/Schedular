@@ -285,15 +285,34 @@ const BookingPage = () => {
           </Card>
         </div>
 
-        {/* Admin Link */}
-        <div className="text-center mt-8">
+        {/* Admin Link & Install Info */}
+        <div className="text-center mt-8 space-y-4">
           <a
             href="/admin"
-            className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+            className="text-blue-600 hover:text-blue-800 font-medium transition-colors inline-block"
             data-testid="admin-link"
           >
             Admin Dashboard →
           </a>
+          
+          {/* Mobile Install Instructions */}
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-indigo-200">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <Smartphone className="w-8 h-8 text-indigo-600 mt-1 flex-shrink-0" />
+                  <div className="text-left">
+                    <h3 className="font-semibold text-gray-900 mb-2">Get the Mobile App</h3>
+                    <div className="text-sm text-gray-600 space-y-2">
+                      <p><strong>📱 On Mobile:</strong> Tap the share button in your browser and select "Add to Home Screen"</p>
+                      <p><strong>💻 On Desktop:</strong> Look for the install icon in your address bar</p>
+                      <p className="text-xs text-gray-500 mt-3">Works on iOS, Android, and Desktop browsers</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
