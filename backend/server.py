@@ -7,7 +7,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional
+from typing import List
 import uuid
 from datetime import datetime, timezone
 import jwt
@@ -34,11 +34,9 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-
 # Define Models
 class Interview(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     candidate_name: str
     company_name: str
@@ -62,7 +60,6 @@ class TokenResponse(BaseModel):
     token: str
     message: str
 
-
 # Helper functions
 def create_token(username: str) -> str:
     return jwt.encode({"username": username}, JWT_SECRET, algorithm="HS256")
@@ -73,7 +70,6 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         return payload
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
-
 
 # Routes
 @api_router.get("/")
@@ -91,36 +87,26 @@ async def admin_login(login_data: AdminLogin):
 async def create_interview(interview_data: InterviewCreate):
     interview_dict = interview_data.model_dump()
     interview_obj = Interview(**interview_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
     doc = interview_obj.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
-    
     await db.interviews.insert_one(doc)
     return interview_obj
 
 @api_router.get("/interviews", response_model=List[Interview])
 async def get_all_interviews(payload: dict = Depends(verify_token)):
     interviews = await db.interviews.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
     for interview in interviews:
         if isinstance(interview['created_at'], str):
             interview['created_at'] = datetime.fromisoformat(interview['created_at'])
-    
     return interviews
 
 @api_router.get("/interviews/date/{date}", response_model=List[Interview])
 async def get_interviews_by_date(date: str, payload: dict = Depends(verify_token)):
     interviews = await db.interviews.find({"interview_date": date}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
     for interview in interviews:
         if isinstance(interview['created_at'], str):
             interview['created_at'] = datetime.fromisoformat(interview['created_at'])
-    
     return interviews
-
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -132,6 +118,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ✅ Root endpoint for base URL
+@app.get("/")
+async def root_message():
+    return {"message": "Backend running successfully!"}
 
 # Configure logging
 logging.basicConfig(
