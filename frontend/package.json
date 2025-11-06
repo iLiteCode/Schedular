@@ -55,10 +55,10 @@
     "zod": "^3.24.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test"
-  },
+  "start": "craco start",
+  "build": "craco build && cp public/_redirects build/_redirects",
+  "test": "craco test"
+},
   "browserslist": {
     "production": [
       ">0.2%",
